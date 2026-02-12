@@ -14,14 +14,13 @@
     justify-content: center;
     font-family: 'Segoe UI', sans-serif;
 
-    /* EARLIER HEART BACKGROUND */
+    /* Earlier Heart Background */
     background:
       linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
       url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1400&q=80");
 
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     background-attachment: fixed;
   }
 
@@ -42,6 +41,24 @@
     height: 480px;
     perspective: 1000px;
     z-index: 2;
+    position: relative;
+  }
+
+  /* Glowing Border */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #ff0066, #ff4d6d, #ff85a1);
+    z-index: -1;
+    filter: blur(15px);
+    animation: glow 3s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
   }
 
   .inner {
@@ -56,7 +73,7 @@
     transform: rotateY(180deg);
   }
 
-  /* DIFFERENT IMAGE INSIDE TILE */
+  /* Different Tile Image */
   .front, .back {
     position: absolute;
     width: 100%;
@@ -77,11 +94,10 @@
 
     background-size: cover;
     background-position: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
   }
 
-  .front h1 {
-    color: #ffd6e8;
+  .back {
+    transform: rotateY(180deg);
   }
 
   .kiss {
@@ -97,31 +113,33 @@
   }
 
   .tap {
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 0.9em;
     color: #eee;
-  }
-
-  .back {
-    transform: rotateY(180deg);
-    box-shadow: 0 0 45px rgba(255, 0, 102, 0.9);
-  }
-
-  .back h2 {
-    color: #ffc2d1;
   }
 
   .message {
     font-size: 1.1em;
     line-height: 1.6;
-    color: #fff;
   }
 
   .signature {
     margin-top: 20px;
     font-style: italic;
-    color: #ffd6e8;
     font-weight: bold;
+  }
+
+  /* Kiss Burst Effect */
+  .burst {
+    position: absolute;
+    font-size: 24px;
+    animation: explode 1s forwards;
+    pointer-events: none;
+  }
+
+  @keyframes explode {
+    0% { transform: scale(1) translate(0,0); opacity: 1; }
+    100% { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
   }
 </style>
 </head>
@@ -130,6 +148,7 @@
 <script>
   const symbols = ["💋","❤️","💖","✨","😘"];
 
+  // Floating hearts
   for (let i = 0; i < 30; i++) {
     let float = document.createElement("div");
     float.className = "float";
@@ -139,6 +158,25 @@
     float.style.animationDuration = (5 + Math.random() * 5) + "s";
     document.body.appendChild(float);
   }
+
+  function flipCard(event) {
+    const card = document.getElementById("card");
+    card.classList.add("flip");
+
+    // Kiss Burst
+    for (let i = 0; i < 10; i++) {
+      let burst = document.createElement("div");
+      burst.className = "burst";
+      burst.innerHTML = "💋";
+      burst.style.left = event.clientX + "px";
+      burst.style.top = event.clientY + "px";
+      burst.style.setProperty("--x", (Math.random() * 200 - 100) + "px");
+      burst.style.setProperty("--y", (Math.random() * 200 - 100) + "px");
+      document.body.appendChild(burst);
+
+      setTimeout(() => burst.remove(), 1000);
+    }
+  }
 </script>
 
 <div class="card" id="card">
@@ -146,19 +184,17 @@
 
     <div class="front">
       <h1>Happy Kiss Day 💋</h1>
-      <div class="kiss" onclick="flipCard()">😘</div>
+      <div class="kiss" onclick="flipCard(event)">😘</div>
       <div class="tap">Tap the kiss</div>
     </div>
 
     <div class="back">
       <h2>Sealed With a Kiss 💋❤️</h2>
       <div class="message">
-        My love ❤️,<br /><br />
-        Every kiss from you feels like<br />
-        a promise of forever.<br />
-        Soft, warm, and full of love 😘<br /><br />
-        Today I send you endless kisses 💋<br />
-        wrapped in my heart.<br /><br />
+        My love ❤️,<br><br>
+        Every kiss from you feels like<br>
+        a promise of forever.<br>
+        Soft, warm, and magical 😘<br><br>
         Happy Kiss Day ❤️
       </div>
       <div class="signature">— Your V ❤️</div>
@@ -166,12 +202,6 @@
 
   </div>
 </div>
-
-<script>
-  function flipCard() {
-    document.getElementById("card").classList.add("flip");
-  }
-</script>
 
 </body>
 </html>
