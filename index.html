@@ -14,7 +14,7 @@
     justify-content: center;
     font-family: 'Segoe UI', sans-serif;
 
-    /* Earlier Heart Background */
+    /* Page Background (Earlier Heart Image) */
     background:
       linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
       url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1400&q=80");
@@ -24,11 +24,11 @@
     background-attachment: fixed;
   }
 
-  /* Floating Hearts */
+  /* Floating hearts */
   .float {
     position: absolute;
     animation: floatUp 8s linear infinite;
-    z-index: 1;
+    z-index: 0;
   }
 
   @keyframes floatUp {
@@ -40,16 +40,16 @@
     width: 350px;
     height: 480px;
     perspective: 1000px;
-    z-index: 2;
     position: relative;
+    z-index: 2;
   }
 
-  /* Glowing Border */
+  /* Glow Border */
   .card::before {
     content: "";
     position: absolute;
-    inset: -3px;
-    border-radius: 25px;
+    inset: -4px;
+    border-radius: 24px;
     background: linear-gradient(45deg, #ff0066, #ff4d6d, #ff85a1);
     z-index: -1;
     filter: blur(15px);
@@ -73,7 +73,7 @@
     transform: rotateY(180deg);
   }
 
-  /* Different Tile Image */
+  /* Tile Background (Different Image) */
   .front, .back {
     position: absolute;
     width: 100%;
@@ -129,17 +129,18 @@
     font-weight: bold;
   }
 
-  /* Kiss Burst Effect */
+  /* Burst */
   .burst {
-    position: absolute;
+    position: fixed;
     font-size: 24px;
-    animation: explode 1s forwards;
     pointer-events: none;
+    animation: explode 1s forwards;
+    z-index: 5;
   }
 
   @keyframes explode {
-    0% { transform: scale(1) translate(0,0); opacity: 1; }
-    100% { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
+    from { transform: scale(1) translate(0,0); opacity: 1; }
+    to { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
   }
 </style>
 </head>
@@ -149,7 +150,7 @@
   const symbols = ["💋","❤️","💖","✨","😘"];
 
   // Floating hearts
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 25; i++) {
     let float = document.createElement("div");
     float.className = "float";
     float.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
@@ -159,21 +160,23 @@
     document.body.appendChild(float);
   }
 
-  function flipCard(event) {
+  function flipCard(e) {
     const card = document.getElementById("card");
     card.classList.add("flip");
 
-    // Kiss Burst
+    const rect = e.target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
     for (let i = 0; i < 10; i++) {
       let burst = document.createElement("div");
       burst.className = "burst";
       burst.innerHTML = "💋";
-      burst.style.left = event.clientX + "px";
-      burst.style.top = event.clientY + "px";
+      burst.style.left = centerX + "px";
+      burst.style.top = centerY + "px";
       burst.style.setProperty("--x", (Math.random() * 200 - 100) + "px");
       burst.style.setProperty("--y", (Math.random() * 200 - 100) + "px");
       document.body.appendChild(burst);
-
       setTimeout(() => burst.remove(), 1000);
     }
   }
