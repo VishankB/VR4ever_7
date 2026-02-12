@@ -14,7 +14,6 @@
     justify-content: center;
     font-family: 'Segoe UI', sans-serif;
 
-    /* Page Background (Earlier Heart Image) */
     background:
       linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
       url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1400&q=80");
@@ -24,7 +23,6 @@
     background-attachment: fixed;
   }
 
-  /* Floating hearts */
   .float {
     position: absolute;
     animation: floatUp 8s linear infinite;
@@ -44,23 +42,6 @@
     z-index: 2;
   }
 
-  /* Glow Border */
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border-radius: 24px;
-    background: linear-gradient(45deg, #ff0066, #ff4d6d, #ff85a1);
-    z-index: -1;
-    filter: blur(15px);
-    animation: glow 3s infinite alternate;
-  }
-
-  @keyframes glow {
-    from { opacity: 0.6; }
-    to { opacity: 1; }
-  }
-
   .inner {
     width: 100%;
     height: 100%;
@@ -73,7 +54,6 @@
     transform: rotateY(180deg);
   }
 
-  /* Tile Background (Different Image) */
   .front, .back {
     position: absolute;
     width: 100%;
@@ -112,35 +92,17 @@
     100% { transform: scale(1); }
   }
 
-  .tap {
-    margin-top: 10px;
-    font-size: 0.9em;
-    color: #eee;
-  }
-
-  .message {
-    font-size: 1.1em;
-    line-height: 1.6;
-  }
-
-  .signature {
-    margin-top: 20px;
-    font-style: italic;
-    font-weight: bold;
-  }
-
-  /* Burst */
   .burst {
     position: fixed;
-    font-size: 24px;
+    font-size: 28px;
     pointer-events: none;
-    animation: explode 1s forwards;
+    animation: explode 2.5s forwards;
     z-index: 5;
   }
 
   @keyframes explode {
-    from { transform: scale(1) translate(0,0); opacity: 1; }
-    to { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
+    0% { transform: scale(1) translate(0,0); opacity: 1; }
+    100% { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
   }
 </style>
 </head>
@@ -162,13 +124,13 @@
 
   function flipCard(e) {
     const card = document.getElementById("card");
-    card.classList.add("flip");
 
     const rect = e.target.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    for (let i = 0; i < 10; i++) {
+    // Create burst
+    for (let i = 0; i < 12; i++) {
       let burst = document.createElement("div");
       burst.className = "burst";
       burst.innerHTML = "💋";
@@ -177,8 +139,13 @@
       burst.style.setProperty("--x", (Math.random() * 200 - 100) + "px");
       burst.style.setProperty("--y", (Math.random() * 200 - 100) + "px");
       document.body.appendChild(burst);
-      setTimeout(() => burst.remove(), 1000);
+      setTimeout(() => burst.remove(), 2500);
     }
+
+    // Flip AFTER 2.5 seconds
+    setTimeout(() => {
+      card.classList.add("flip");
+    }, 2500);
   }
 </script>
 
@@ -188,19 +155,15 @@
     <div class="front">
       <h1>Happy Kiss Day 💋</h1>
       <div class="kiss" onclick="flipCard(event)">😘</div>
-      <div class="tap">Tap the kiss</div>
     </div>
 
     <div class="back">
       <h2>Sealed With a Kiss 💋❤️</h2>
-      <div class="message">
-        My love ❤️,<br><br>
+      <p>
         Every kiss from you feels like<br>
-        a promise of forever.<br>
-        Soft, warm, and magical 😘<br><br>
+        a promise of forever 😘<br><br>
         Happy Kiss Day ❤️
-      </div>
-      <div class="signature">— Your V ❤️</div>
+      </p>
     </div>
 
   </div>
